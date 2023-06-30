@@ -1,45 +1,34 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Modal from '../Modal/Modal';
 import { Item, Img } from './ImageGalleryItem.styled';
 
-// Классовый компонент ImageItem
-class ImageItem extends Component {
-  state = {
-    showModal: false, // Хранит состояние модального окна (открыто или закрыто)
+const ImageItem = ({ image }) => {
+  const [showModal, setShowModal] = useState(false);
+
+  const toggleModal = () => {
+    setShowModal(!showModal);
   };
 
-  // Метод для переключения состояния модального окна
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal, // Инвертирует значение showModal
-    }));
-  };
-
-  render() {
-    const { showModal } = this.state; // Получаем текущее значение showModal из состояния
-    const { image } = this.props; // Получаем переданный пропс image
-
-    return (
-      <>
-        <Item>
-          <Img
-            src={image.webformatURL} // URL маленького изображения
-            alt={image.tags} // Теги изображения
-            onClick={this.toggleModal} // Обработчик клика для открытия модального окна
+  return (
+    <>
+      <Item>
+        <Img
+          src={image.webformatURL}
+          alt={image.tags}
+          onClick={toggleModal}
+        />
+        {showModal && (
+          <Modal
+            image={image}
+            tags={image.tags}
+            onClose={toggleModal}
           />
-          {showModal && ( // Если showModal равно true, отображаем модальное окно
-            <Modal
-              largeImageURL={image.largeImageURL} // URL большого изображения
-              tags={image.tags} // Теги изображения
-              onClose={this.toggleModal} // Обработчик для закрытия модального окна
-            />
-          )}
-        </Item>
-      </>
-    );
-  }
-}
+        )}
+      </Item>
+    </>
+  );
+};
 
 ImageItem.propTypes = {
   image: PropTypes.shape({
